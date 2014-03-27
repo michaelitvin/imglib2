@@ -33,6 +33,9 @@
 
 package net.imglib2.algorithm.fft2;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import net.imglib2.FinalDimensions;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
@@ -223,10 +226,17 @@ public class FFT
 
 	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToReal( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output, final int numThreads )
 	{
+		final ExecutorService service = Executors.newFixedThreadPool(numThreads);
+		complexToReal(input, output)
+		service.shutdown();
+	}
+	
+	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToReal( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output, final ExecutorService service )
+	{
 		for ( int d = 1; d < input.numDimensions(); ++d )
-			FFTMethods.complexToComplex( input, d, false, true, numThreads );
+			FFTMethods.complexToComplex( input, d, false, true, service );
 
-		FFTMethods.complexToReal( input, output, 0, true, numThreads );
+		FFTMethods.complexToReal( input, output, 0, true, service );
 	}
 
 	final public static < C extends ComplexType< C >, R extends RealType< R > > void complexToRealUnpad( final RandomAccessibleInterval< C > input, final RandomAccessibleInterval< R > output )
