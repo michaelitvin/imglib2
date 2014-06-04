@@ -81,20 +81,16 @@ public class DifferenceOfGaussian {
 	 *            convolution).
 	 * @param dog
 	 *            the Difference-of-Gaussian result image.
-	 * @param numThreads
-	 *            how many threads to use for the computation.
+	 * @param service
+	 *            service providing threads for multi-threading
 	 */
-	public static <T extends NumericType<T> & NativeType<T>> void DoG(
-			final double[] sigma1, final double[] sigma2,
-			final RandomAccessible<T> input,
-			final RandomAccessibleInterval<T> dog, final ExecutorService service) {
-		final T type = Util.getTypeFromInterval(dog);
-		final Img<T> g1 = Util.getArrayOrCellImgFactory(dog, type).create(dog,
-				type);
-		final long[] translation = new long[dog.numDimensions()];
-		dog.min(translation);
-		DoG(sigma1, sigma2, input, Views.translate(g1, translation), dog,
-				service);
+	public static < T extends NumericType< T > & NativeType< T > > void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessibleInterval< T > dog, final ExecutorService service )
+	{
+		final T type = Util.getTypeFromInterval( dog );
+		final Img< T > g1 = Util.getArrayOrCellImgFactory( dog, type ).create( dog, type );
+		final long[] translation = new long[ dog.numDimensions() ];
+		dog.min( translation );
+		DoG( sigma1, sigma2, input, Views.translate( g1, translation ), dog, service );
 	}
 
 	/**
@@ -115,76 +111,80 @@ public class DifferenceOfGaussian {
 	 *            dog result image.
 	 * @param dog
 	 *            the Difference-of-Gaussian result image.
-	 * @param numThreads
+	 * @param service
 	 *            how many threads to use for the computation.
 	 */
-	public static <T extends NumericType<T>> void DoG(final double[] sigma1,
-			final double[] sigma2, final RandomAccessible<T> input,
-			final RandomAccessible<T> tmp,
-			final RandomAccessibleInterval<T> dog, final ExecutorService service) {
-		final ArrayList<Future<Void>> futures = new ArrayList<Future<Void>>();
-		final IntervalView<T> tmpInterval = Views.interval(tmp, dog);
-		try {
-			Gauss3.gauss(sigma1, input, tmpInterval, service);
-			Gauss3.gauss(sigma2, input, dog, service);
-		} catch (final IncompatibleTypeException e) {
+	public static < T extends NumericType< T > > void DoG( final double[] sigma1, final double[] sigma2, final RandomAccessible< T > input, final RandomAccessible< T > tmp, final RandomAccessibleInterval< T > dog, final ExecutorService service )
+	{
+		final IntervalView< T > tmpInterval = Views.interval( tmp, dog );
+		try
+		{
+			Gauss3.gauss( sigma1, input, tmpInterval, service );
+			Gauss3.gauss( sigma2, input, dog, service );
+		}
+		catch ( final IncompatibleTypeException e )
+		{
 			e.printStackTrace();
 		}
 		final IterableInterval<T> dogIterable = Views.iterable(dog);
 		final IterableInterval<T> tmpIterable = Views.iterable(tmpInterval);
 		final long size = dogIterable.size();
-		final int numTasks = Runtime.getRuntime().availableProcessors() * 20;
+		// FIXME find better heuristic?
+		final int numThreads = Runtime.getRuntime().availableProcessors();
+		final int numTasks = numThreads <= 1 ? 1 : numThreads * 20;
 		final long taskSize = size / numTasks;
-		for (int taskNum = 0; taskNum < numTasks; ++taskNum) {
+		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
+		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
+		{
 			final long fromIndex = taskNum * taskSize;
-			final long thisTaskSize = (taskNum == numTasks - 1) ? size
-					- fromIndex : taskSize;
-			final Callable<Void> r;
-			if (dogIterable.iterationOrder().equals(
-					tmpIterable.iterationOrder())) {
-				r = new Callable<Void>() {
+			final long thisTaskSize = ( taskNum == numTasks - 1 ) ? size - fromIndex : taskSize;
+			if ( dogIterable.iterationOrder().equals( tmpIterable.iterationOrder() ) )
+				futures.add( service.submit( new Callable< Void >()
+				{
 					@Override
-					public Void call() {
-						final Cursor<T> dogCursor = dogIterable.cursor();
-						final Cursor<T> tmpCursor = tmpIterable.cursor();
-						dogCursor.jumpFwd(fromIndex);
-						tmpCursor.jumpFwd(fromIndex);
-						for (int i = 0; i < thisTaskSize; ++i)
-							dogCursor.next().sub(tmpCursor.next());
-
+					public Void call()
+					{
+						final Cursor< T > dogCursor = dogIterable.cursor();
+						final Cursor< T > tmpCursor = tmpIterable.cursor();
+						dogCursor.jumpFwd( fromIndex );
+						tmpCursor.jumpFwd( fromIndex );
+						for ( int i = 0; i < thisTaskSize; ++i )
+							dogCursor.next().sub( tmpCursor.next() );
 						return null;
 					}
-				};
-			} else {
-				r = new Callable<Void>() {
+				} ) );
+			else
+				futures.add( service.submit( new Callable< Void >()
+				{
 					@Override
-					public Void call() {
-						final Cursor<T> dogCursor = dogIterable
-								.localizingCursor();
-						final RandomAccess<T> tmpAccess = tmpInterval
-								.randomAccess();
-						dogCursor.jumpFwd(fromIndex);
-						for (int i = 0; i < thisTaskSize; ++i) {
+					public Void call()
+					{
+						final Cursor< T > dogCursor = dogIterable.localizingCursor();
+						final RandomAccess< T > tmpAccess = tmpInterval.randomAccess();
+						dogCursor.jumpFwd( fromIndex );
+						for ( int i = 0; i < thisTaskSize; ++i )
+						{
 							final T o = dogCursor.next();
 							tmpAccess.setPosition(dogCursor);
 							o.sub(tmpAccess.get());
 						}
-
 						return null;
 					}
-				};
-			}
-
-			futures.add(service.submit(r));
+				} ) );
 		}
-
-		for (final Future<Void> f : futures) {
-			try {
+		for ( final Future< Void > f : futures )
+		{
+			try
+			{
 				f.get();
-			} catch (final InterruptedException e) {
-				throw new RuntimeException(e);
-			} catch (final ExecutionException e) {
-				throw new RuntimeException(e);
+			}
+			catch ( final InterruptedException e )
+			{
+				e.printStackTrace();
+			}
+			catch ( final ExecutionException e )
+			{
+				e.printStackTrace();
 			}
 		}
 	}

@@ -43,7 +43,7 @@ import net.imglib2.RealLocalizable;
 
 /**
  * Convenience methods for manipulating {@link Interval Intervals}.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class Intervals
@@ -52,7 +52,7 @@ public class Intervals
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * coordinates and size. For example, to create a 2D interval from (10, 10)
 	 * to (20, 40) use createMinSize( 10, 10, 11, 31 ).
-	 *
+	 * 
 	 * @param minsize
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -69,7 +69,7 @@ public class Intervals
 	 * Create a {@link FinalInterval} from a parameter list comprising minimum
 	 * and maximum coordinates. For example, to create a 2D interval from (10,
 	 * 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
-	 *
+	 * 
 	 * @param minmax
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -83,10 +83,10 @@ public class Intervals
 	}
 
 	/**
-	 * Create a {@link FinalRealInterval} from a parameter list comprising minimum
-	 * coordinates and size. For example, to create a 2D interval from (10, 10)
-	 * to (20, 40) use createMinSize( 10, 10, 11, 31 ).
-	 *
+	 * Create a {@link FinalRealInterval} from a parameter list comprising
+	 * minimum coordinates and size. For example, to create a 2D interval from
+	 * (10, 10) to (20, 40) use createMinSize( 10, 10, 11, 31 ).
+	 * 
 	 * @param minsize
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -100,10 +100,10 @@ public class Intervals
 	}
 
 	/**
-	 * Create a {@link FinalRealInterval} from a parameter list comprising minimum
-	 * and maximum coordinates. For example, to create a 2D interval from (10,
-	 * 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
-	 *
+	 * Create a {@link FinalRealInterval} from a parameter list comprising
+	 * minimum and maximum coordinates. For example, to create a 2D interval
+	 * from (10, 10) to (20, 40) use createMinMax( 10, 10, 20, 40 ).
+	 * 
 	 * @param minmax
 	 *            a list of <em>2*n</em> parameters to create a <em>n</em>
 	 *            -dimensional interval. The first <em>n</em> parameters specify
@@ -118,10 +118,10 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in all dimensions.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval plus border
 	 * pixels on every side, in every dimension.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param border
@@ -145,10 +145,10 @@ public class Intervals
 
 	/**
 	 * Grow/shrink an interval in one dimensions.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval plus border
 	 * pixels on every side, in dimension d.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param border
@@ -171,10 +171,10 @@ public class Intervals
 
 	/**
 	 * Translate an interval in one dimension.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the input interval shifted by t
 	 * in dimension d.
-	 *
+	 * 
 	 * @param interval
 	 *            the input interval
 	 * @param t
@@ -197,10 +197,10 @@ public class Intervals
 
 	/**
 	 * Compute the intersection of two intervals.
-	 *
+	 * 
 	 * Create a {@link FinalInterval} , which is the intersection of the input
 	 * intervals (i.e., the area contained in both input intervals).
-	 *
+	 * 
 	 * @param intervalA
 	 *            input interval
 	 * @param intervalB
@@ -225,7 +225,7 @@ public class Intervals
 	/**
 	 * Compute the smallest {@link Interval} containing the specified
 	 * {@link RealInterval}.
-	 *
+	 * 
 	 * @param ri
 	 *            input interval.
 	 * @return the smallest integer interval that completely contains the input
@@ -247,7 +247,7 @@ public class Intervals
 	/**
 	 * Compute the largest {@link Interval} that is contained in the specified
 	 * {@link RealInterval}.
-	 *
+	 * 
 	 * @param ri
 	 *            input interval.
 	 * @return the largest integer interval that is completely contained in the
@@ -269,7 +269,7 @@ public class Intervals
 	/**
 	 * Check whether the given interval is empty, that is, the maximum is
 	 * smaller than the minimum in some dimension.
-	 *
+	 * 
 	 * @param interval
 	 *            interval to check
 	 * @return true when the interval is empty, that is, the maximum is smaller
@@ -279,7 +279,7 @@ public class Intervals
 	{
 		final int n = interval.numDimensions();
 		for ( int d = 0; d < n; ++d )
-			if (interval.min( d ) > interval.max( d ))
+			if ( interval.min( d ) > interval.max( d ) )
 				return true;
 		return false;
 	}
@@ -288,7 +288,7 @@ public class Intervals
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.
-	 *
+	 * 
 	 * @return true, iff {@code contained} is in {@code containing}.
 	 */
 	public static boolean contains( final Interval containing, final Localizable contained )
@@ -309,7 +309,7 @@ public class Intervals
 	 * Test whether the {@code containing} interval contains the
 	 * {@code contained} point. The interval is closed, that is, boundary points
 	 * are contained.
-	 *
+	 * 
 	 * @return true, iff {@code contained} is in {@code containing}.
 	 */
 	public static boolean contains( final RealInterval containing, final RealLocalizable contained )
@@ -361,8 +361,9 @@ public class Intervals
 	}
 
 	/**
-	 * Compute the number of elements contained in an (integer) {@link Interval}.
-	 *
+	 * Compute the number of elements contained in an (integer) {@link Interval}
+	 * .
+	 * 
 	 * @return number of elements in {@code interval}.
 	 */
 	public static long numElements( final Dimensions interval )
@@ -395,7 +396,6 @@ public class Intervals
 	 */
 	public static boolean equalDimensions( final Interval a, final Interval b )
 	{
-
 		if ( a.numDimensions() != b.numDimensions() )
 			return false;
 
@@ -404,5 +404,176 @@ public class Intervals
 				return false;
 
 		return true;
+	}
+
+	/**
+	 * Create a <code>long[]</code> with the dimensions of a {@link Dimensions}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See
+	 * {@link Dimensions#dimensions(long[])}.
+	 * </p>
+	 * 
+	 * @param dimensions
+	 *            something which has dimensions
+	 * 
+	 * @return dimensions as a new <code>long[]</code>
+	 */
+	public static long[] dimensionsAsLongArray( final Dimensions dimensions )
+	{
+		final long[] dims = new long[ dimensions.numDimensions() ];
+		dimensions.dimensions( dims );
+		return dims;
+	}
+
+	/**
+	 * Create a <code>int[]</code> with the dimensions of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
+	 * @param dimensions
+	 *            something which has dimensions
+	 * 
+	 * @return dimensions as a new <code>int[]</code>
+	 */
+	public static int[] dimensionsAsIntArray( final Dimensions dimensions )
+	{
+		final int n = dimensions.numDimensions();
+		final int[] dims = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			dims[ d ] = ( int ) dimensions.dimension( d );
+		return dims;
+	}
+
+	/**
+	 * Create a <code>long[]</code> with the minimum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See {@link Interval#min(long[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return minimum as a new <code>long[]</code>
+	 */
+	public static long[] minAsLongArray( final Interval interval )
+	{
+		final long[] min = new long[ interval.numDimensions() ];
+		interval.min( min );
+		return min;
+	}
+
+	/**
+	 * Create a <code>int[]</code> with the minimum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return minimum as a new <code>int[]</code>
+	 */
+	public static int[] minAsIntArray( final Interval interval )
+	{
+		final int n = interval.numDimensions();
+		final int[] min = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			min[ d ] = ( int ) interval.min( d );
+		return min;
+	}
+
+	/**
+	 * Create a <code>long[]</code> with the maximum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See {@link Interval#max(long[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return maximum as a new <code>long[]</code>
+	 */
+	public static long[] maxAsLongArray( final Interval interval )
+	{
+		final long[] max = new long[ interval.numDimensions() ];
+		interval.max( max );
+		return max;
+	}
+
+	/**
+	 * Create a <code>int[]</code> with the maximum of an {@link Interval}.
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return maximum as a new <code>int[]</code>
+	 */
+	public static int[] maxAsIntArray( final Interval interval )
+	{
+		final int n = interval.numDimensions();
+		final int[] max = new int[ n ];
+		for ( int d = 0; d < n; ++d )
+			max[ d ] = ( int ) interval.max( d );
+		return max;
+	}
+
+	/**
+	 * Create a <code>double[]</code> with the maximum of a {@link RealInterval}
+	 * .
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See
+	 * {@link RealInterval#realMax(double[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return maximum as a new double[]
+	 */
+	public static double[] maxAsDoubleArray( final RealInterval interval )
+	{
+		final double[] max = new double[ interval.numDimensions() ];
+		interval.realMax( max );
+		return max;
+	}
+
+	/**
+	 * Create a <code>double[]</code> with the minimum of a {@link RealInterval}
+	 * .
+	 * 
+	 * <p>
+	 * Keep in mind that creating arrays wildly is not good practice and
+	 * consider using the interval directly. See
+	 * {@link RealInterval#realMin(double[])}.
+	 * </p>
+	 * 
+	 * @param interval
+	 *            something with interval boundaries
+	 * 
+	 * @return minimum as a new double[]
+	 */
+	public static double[] minAsDoubleArray( final RealInterval interval )
+	{
+		final double[] min = new double[ interval.numDimensions() ];
+		interval.realMin( min );
+		return min;
 	}
 }

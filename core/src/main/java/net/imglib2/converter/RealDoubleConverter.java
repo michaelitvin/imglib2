@@ -38,9 +38,10 @@ import net.imglib2.type.numeric.real.DoubleType;
 
 /**
  * Converts any {@link RealType} to a {@link DoubleType}.
- *
- * If the input type is complex, it loses the imaginary part without complaining further.
- *
+ * 
+ * If the input type is complex, it loses the imaginary part without complaining
+ * further.
+ * 
  * @author Johannes Schindelin
  */
 public class RealDoubleConverter< R extends RealType< R > > implements Converter< R, DoubleType >
@@ -49,5 +50,5 @@ public class RealDoubleConverter< R extends RealType< R > > implements Converter
 	public void convert( final R input, final DoubleType output )
 	{
 		output.set( input.getRealDouble() );
-	}	
+	}
 }

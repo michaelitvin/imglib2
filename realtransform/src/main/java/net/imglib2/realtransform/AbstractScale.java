@@ -45,28 +45,30 @@ import net.imglib2.RealPositionable;
 abstract public class AbstractScale implements ScaleGet
 {
 	final protected double[] s;
+
 	final protected RealPoint[] ds;
-	
+
 	protected AbstractScale( final double[] s, final RealPoint[] ds )
 	{
 		this.s = s;
 		this.ds = ds;
 	}
-	
+
 	public AbstractScale( final double... s )
 	{
 		this.s = s.clone();
 		ds = new RealPoint[ s.length ];
 	}
-	
+
 	/**
 	 * Set the scale vector.
 	 * 
-	 * @param s s.length <= the number of dimensions of this {@link AbstractScale}
+	 * @param s
+	 *            s.length <= the number of dimensions of this
+	 *            {@link AbstractScale}
 	 */
 	abstract public void set( final double... s );
-	
-	
+
 	@Override
 	public void applyInverse( final double[] source, final double[] target )
 	{
@@ -81,7 +83,7 @@ abstract public class AbstractScale implements ScaleGet
 	{
 		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
 		
-		for ( int d =0; d < s.length; ++d )
+		for ( int d = 0; d < s.length; ++d )
 			source[ d ] = ( float )( target[ d ] / s[ d ] );
 		
 	}
@@ -91,13 +93,13 @@ abstract public class AbstractScale implements ScaleGet
 	{
 		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length : "Input dimensions too small.";
 		
-		for ( int d =0; d < s.length; ++d )
+		for ( int d = 0; d < s.length; ++d )
 			source.setPosition( target.getDoublePosition( d ) / s[ d ], d );
 	}
 
 	@Override
 	abstract public AbstractScale inverse();
-	
+
 	@Override
 	public int numDimensions()
 	{
@@ -121,7 +123,7 @@ abstract public class AbstractScale implements ScaleGet
 	{
 		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
 		
-		for ( int d =0; d < s.length; ++d )
+		for ( int d = 0; d < s.length; ++d )
 			target[ d ] = source[ d ] * s[ d ];
 	}
 
@@ -130,7 +132,7 @@ abstract public class AbstractScale implements ScaleGet
 	{
 		assert source.length >= s.length && target.length >= s.length : "Input dimensions too small.";
 		
-		for ( int d =0; d < s.length; ++d )
+		for ( int d = 0; d < s.length; ++d )
 			target[ d ] = ( float )( source[ d ] * s[ d ] );
 	}
 
@@ -139,7 +141,7 @@ abstract public class AbstractScale implements ScaleGet
 	{
 		assert source.numDimensions() >= s.length && target.numDimensions() >= s.length : "Input dimensions too small.";
 		
-		for ( int d =0; d < s.length; ++d )
+		for ( int d = 0; d < s.length; ++d )
 			target.setPosition( source.getDoublePosition( d ) * s[ d ], d );
 	}
 
@@ -171,7 +173,7 @@ abstract public class AbstractScale implements ScaleGet
 
 	@Override
 	abstract public AbstractScale copy();
-	
+
 	@Override
 	public double getScale( final int d )
 	{

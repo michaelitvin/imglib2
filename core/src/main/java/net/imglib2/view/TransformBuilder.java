@@ -316,14 +316,13 @@ public class TransformBuilder< T >
 					i.set( new TranslationTransform( translation ) );
 				}
 				// else if ( isComponentMapping( mixed ) )
-				// {
-				// // found pure component mapping
-				// // replace by a ComponentMappingTransform
-				// final int[] component = new int[ mixed.numTargetDimensions()
-				// ];
-				// mixed.getComponentMapping( component );
-				// i.set( new ComponentMappingTransform( component ) );
-				// }
+//				{
+//					// found pure component mapping
+//					// replace by a ComponentMappingTransform
+//					final int[] component = new int[ mixed.numTargetDimensions() ];
+//					mixed.getComponentMapping( component );
+//					i.set( new ComponentMappingTransform( component ) );
+//				}
 				else if ( isSlicing( mixed ) )
 				{
 					// found pure slicing

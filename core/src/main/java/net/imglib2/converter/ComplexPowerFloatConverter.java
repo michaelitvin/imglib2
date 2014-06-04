@@ -48,5 +48,5 @@ public class ComplexPowerFloatConverter< R extends ComplexType< R > > implements
 	public void convert( final R input, final FloatType output )
 	{
 		output.set( input.getPowerFloat() );
-	}	
+	}
 }

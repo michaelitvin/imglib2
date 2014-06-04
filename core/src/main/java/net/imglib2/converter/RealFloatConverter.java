@@ -38,7 +38,7 @@ import net.imglib2.type.numeric.real.FloatType;
 
 /**
  * 
- *
+ * 
  * @author Stephan Saalfeld
  * @author Stephan Saalfeld <saalfeld@mpi-cbg.de>
  * @author Stephan Preibisch
@@ -49,5 +49,5 @@ public class RealFloatConverter< R extends RealType< R > > implements Converter<
 	public void convert( final R input, final FloatType output )
 	{
 		output.set( input.getRealFloat() );
-	}	
+	}
 }

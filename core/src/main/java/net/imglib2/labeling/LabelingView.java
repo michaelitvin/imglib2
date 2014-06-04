@@ -69,7 +69,7 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	 * @param fac
 	 *            factory to create a new {@link Labeling}
 	 */
-	public LabelingView( RandomAccessibleInterval< LabelingType< L >> in, LabelingFactory< L > fac )
+	public LabelingView( final RandomAccessibleInterval< LabelingType< L >> in, final LabelingFactory< L > fac )
 	{
 		super( in );
 		m_fac = fac;
@@ -78,19 +78,19 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	}
 
 	@Override
-	public boolean getExtents( L label, long[] minExtents, long[] maxExtents )
+	public boolean getExtents( final L label, final long[] minExtents, final long[] maxExtents )
 	{
 		return m_strategy.getExtents( label, minExtents, maxExtents );
 	}
 
 	@Override
-	public boolean getRasterStart( L label, long[] start )
+	public boolean getRasterStart( final L label, final long[] start )
 	{
 		return m_strategy.getRasterStart( label, start );
 	}
 
 	@Override
-	public long getArea( L label )
+	public long getArea( final L label )
 	{
 		return m_strategy.getArea( label );
 	}
@@ -114,13 +114,13 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	}
 
 	@Override
-	public RegionOfInterest getRegionOfInterest( L label )
+	public RegionOfInterest getRegionOfInterest( final L label )
 	{
 		return m_strategy.createRegionOfInterest( label );
 	}
 
 	@Override
-	public IterableRegionOfInterest getIterableRegionOfInterest( L label )
+	public IterableRegionOfInterest getIterableRegionOfInterest( final L label )
 	{
 		return m_strategy.createIterableRegionOfInterest( label );
 	}
@@ -128,9 +128,9 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 	@Override
 	public Labeling< L > copy()
 	{
-		Labeling< L > copy = m_fac.create( this );
-		Cursor< LabelingType< L >> cursor = copy.cursor();
-		RandomAccess< LabelingType< L >> srcAccess = randomAccess();
+		final Labeling< L > copy = m_fac.create( this );
+		final Cursor< LabelingType< L >> cursor = copy.cursor();
+		final RandomAccess< LabelingType< L >> srcAccess = randomAccess();
 
 		while ( cursor.hasNext() )
 		{
@@ -151,7 +151,7 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public boolean supportsOptimizedCursor( Interval interval )
+	public boolean supportsOptimizedCursor( final Interval interval )
 	{
 		if ( this.sourceInterval instanceof SubIntervalIterable )
 			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval ).supportsOptimizedCursor( interval );
@@ -161,7 +161,7 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Object subIntervalIterationOrder( Interval interval )
+	public Object subIntervalIterationOrder( final Interval interval )
 	{
 		if ( this.sourceInterval instanceof SubIntervalIterable )
 			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval ).subIntervalIterationOrder( interval );
@@ -171,7 +171,7 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor< LabelingType< L >> cursor( Interval interval )
+	public Cursor< LabelingType< L >> cursor( final Interval interval )
 	{
 		if ( this.sourceInterval instanceof SubIntervalIterable )
 			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval ).cursor( interval );
@@ -181,7 +181,7 @@ public class LabelingView< L extends Comparable< L >> extends IterableRandomAcce
 
 	@SuppressWarnings( "unchecked" )
 	@Override
-	public Cursor< LabelingType< L >> localizingCursor( Interval interval )
+	public Cursor< LabelingType< L >> localizingCursor( final Interval interval )
 	{
 		if ( this.sourceInterval instanceof SubIntervalIterable )
 			return ( ( SubIntervalIterable< LabelingType< L >> ) this.sourceInterval ).localizingCursor( interval );

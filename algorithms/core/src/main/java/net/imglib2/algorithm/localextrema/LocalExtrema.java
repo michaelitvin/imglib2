@@ -57,14 +57,14 @@ import net.imglib2.view.Views;
  * Provides
  * {@link #findLocalExtrema(RandomAccessibleInterval, LocalNeighborhoodCheck, int)}
  * to find pixels that are extrema in their local neighborhood.
- *
+ * 
  * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
  */
 public class LocalExtrema
 {
 	/**
 	 * A local extremum check.
-	 *
+	 * 
 	 * @param <P>
 	 *            A representation of the extremum. For example, this could be
 	 *            just a {@link Point} describing the location of the extremum.
@@ -79,7 +79,7 @@ public class LocalExtrema
 		 * Determine whether a pixel is a local extremum. If so, return a
 		 * <code>P</code> that represents the maximum. Otherwise return
 		 * <code>null</code>.
-		 *
+		 * 
 		 * @param center
 		 *            an access located on the pixel to test
 		 * @param neighborhood
@@ -94,25 +94,25 @@ public class LocalExtrema
 	 * Find pixels that are extrema in their local neighborhood. The specific
 	 * test for being an extremum can is specified as an implementation of the
 	 * {@link LocalNeighborhoodCheck} interface.
-	 *
-	 * TODO: Make neighborhood shape configurable. This will require that Shape can give a bounding box.
-	 *
+	 * 
+	 * TODO: Make neighborhood shape configurable. This will require that Shape
+	 * can give a bounding box.
+	 * 
 	 * @param img
 	 * @param localNeighborhoodCheck
-	 * @param numThreads
+	 * @param service
 	 * @return
 	 */
 	public static < P, T extends Comparable< T > > ArrayList< P > findLocalExtrema( final RandomAccessibleInterval< T > img, final LocalNeighborhoodCheck< P, T > localNeighborhoodCheck, final ExecutorService service )
 	{
-		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
 		final ArrayList< P > allExtrema = new ArrayList< P >();
 
 		final Interval full = Intervals.expand( img, -1 );
 		final int n = img.numDimensions();
 		final int splitd = n - 1;
-		
-		
-		final int numTasks = Math.max(1, ( int ) Math.min( full.dimension( splitd ), Runtime.getRuntime().availableProcessors() * 20 ));
+		// FIXME is there a better way to determine number of threads
+		final int numThreads = Runtime.getRuntime().availableProcessors();
+		final int numTasks = numThreads <= 1 ? 1 : ( int ) Math.min( full.dimension( splitd ), numThreads * 20 );
 		final long dsize = full.dimension( splitd ) / numTasks;
 		final long[] min = new long[ n ];
 		final long[] max = new long[ n ];
@@ -121,6 +121,7 @@ public class LocalExtrema
 
 		final RectangleShape shape = new RectangleShape( 1, true );
 
+		final ArrayList< Future< Void > > futures = new ArrayList< Future< Void > >();
 		final List< P > synchronizedAllExtrema = Collections.synchronizedList( allExtrema );
 		for ( int taskNum = 0; taskNum < numTasks; ++taskNum )
 		{
@@ -147,7 +148,6 @@ public class LocalExtrema
 			};
 			futures.add( service.submit( r ) );
 		}
-
 		for ( final Future< Void > f : futures )
 		{
 			try
@@ -156,11 +156,11 @@ public class LocalExtrema
 			}
 			catch ( final InterruptedException e )
 			{
-				throw new RuntimeException( e );
+				e.printStackTrace();
 			}
 			catch ( final ExecutionException e )
 			{
-				throw new RuntimeException( e );
+				e.printStackTrace();
 			}
 		}
 
@@ -173,10 +173,10 @@ public class LocalExtrema
 	 * equal to a specified minimum allowed value, and no pixel in the
 	 * neighborhood has a greater value. That means that maxima are non-strict.
 	 * Intensity plateaus may result in multiple maxima.
-	 *
+	 * 
 	 * @param <T>
 	 *            pixel type.
-	 *
+	 * 
 	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
 	 */
 	public static class MaximumCheck< T extends Comparable< T > > implements LocalNeighborhoodCheck< Point, T >
@@ -209,10 +209,10 @@ public class LocalExtrema
 	 * equal to a specified maximum allowed value, and no pixel in the
 	 * neighborhood has a smaller value. That means that minima are non-strict.
 	 * Intensity plateaus may result in multiple minima.
-	 *
+	 * 
 	 * @param <T>
 	 *            pixel type.
-	 *
+	 * 
 	 * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
 	 */
 	public static class MinimumCheck< T extends Comparable< T > > implements LocalNeighborhoodCheck< Point, T >

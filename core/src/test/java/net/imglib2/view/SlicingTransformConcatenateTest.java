@@ -37,15 +37,15 @@ import Jama.Matrix;
 
 /**
  * TODO
- *
+ * 
  */
 public class SlicingTransformConcatenateTest
 {
 	public static boolean testConcatenation( final SlicingTransform t1, final Slicing t2 )
 	{
-		if (t1.numSourceDimensions() != t2.numTargetDimensions() )
+		if ( t1.numSourceDimensions() != t2.numTargetDimensions() )
 		{
-			System.out.println("incompatible dimensions");
+			System.out.println( "incompatible dimensions" );
 			return false;
 		}
 
@@ -55,11 +55,12 @@ public class SlicingTransformConcatenateTest
 		final Matrix mt2 = new Matrix( t2.getMatrix() );
 		final Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
-		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
-			System.out.println("=======================");
-			System.out.println("t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
+		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 )
+		{
+			System.out.println( "=======================" );
+			System.out.println( "t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
 
 			System.out.print( "t1 = " );
 			mt1.print( 1, 0 );
@@ -71,7 +72,7 @@ public class SlicingTransformConcatenateTest
 			mt1.times( mt2 ).print( 1, 0 );
 
 			System.out.println( "wrong result" );
-			System.out.println("=======================");
+			System.out.println( "=======================" );
 			return false;
 		}
 
@@ -80,9 +81,9 @@ public class SlicingTransformConcatenateTest
 
 	public static boolean testPreConcatenation( final Slicing t1, final SlicingTransform t2 )
 	{
-		if (t1.numSourceDimensions() != t2.numTargetDimensions() )
+		if ( t1.numSourceDimensions() != t2.numTargetDimensions() )
 		{
-			System.out.println("incompatible dimensions");
+			System.out.println( "incompatible dimensions" );
 			return false;
 		}
 
@@ -92,11 +93,12 @@ public class SlicingTransformConcatenateTest
 		final Matrix mt2 = new Matrix( t2.getMatrix() );
 		final Matrix mt1t2 = new Matrix( t1t2.getMatrix() );
 
-		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 ) {
-			System.out.println("=======================");
-			System.out.println("t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
-			System.out.println("t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
+		if ( mt1.times( mt2 ).minus( mt1t2 ).normF() > 0.1 )
+		{
+			System.out.println( "=======================" );
+			System.out.println( "t1: " + t1.numSourceDimensions() + " -> " + t1.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t2: " + t2.numSourceDimensions() + " -> " + t2.numTargetDimensions() + " (n -> m)" );
+			System.out.println( "t1t2: " + t1t2.numSourceDimensions() + " -> " + t1t2.numTargetDimensions() + " (n -> m)" );
 
 			System.out.print( "t1 = " );
 			mt1.print( 1, 0 );
@@ -108,7 +110,7 @@ public class SlicingTransformConcatenateTest
 			mt1.times( mt2 ).print( 1, 0 );
 
 			System.out.println( "wrong result" );
-			System.out.println("=======================");
+			System.out.println( "=======================" );
 			return false;
 		}
 
@@ -116,21 +118,22 @@ public class SlicingTransformConcatenateTest
 	}
 
 	SlicingTransform sl1;
+
 	SlicingTransform sl2;
 
 	@Before
 	public void setUp()
-    {
+	{
 		sl1 = new SlicingTransform( 2, 3 );
 		sl1.setComponentMapping( new int[] { 0, 1, -9 } );
 		sl1.setComponentZero( new boolean[] { false, false, true } );
 		sl1.setTranslation( new long[] { 0, 0, 100 } );
 
 		sl2 = new SlicingTransform( 3, 4 );
-		sl2.setComponentMapping( new int[] { -9, 0, 1, 2} );
+		sl2.setComponentMapping( new int[] { -9, 0, 1, 2 } );
 		sl2.setComponentZero( new boolean[] { true, false, false, false } );
 		sl2.setTranslation( new long[] { 1287, 0, 0, 0 } );
-    }
+	}
 
 	@Test
 	public void concatenateTr1Tr2()

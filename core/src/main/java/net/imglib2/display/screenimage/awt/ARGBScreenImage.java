@@ -85,7 +85,9 @@ public class ARGBScreenImage extends ArrayImg< ARGBType, IntArray > implements A
 		setLinkedType( new ARGBType( this ) );
 		this.data = data;
 
-		final SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel().createCompatibleSampleModel( width, height );
+		final SampleModel sampleModel = ARGB_COLOR_MODEL.createCompatibleWritableRaster( 1, 1 ).getSampleModel()
+				.createCompatibleSampleModel( width, height );
+
 		final DataBuffer dataBuffer = new DataBufferInt( data, width * height, 0 );
 		final WritableRaster rgbRaster = Raster.createWritableRaster( sampleModel, dataBuffer, null );
 		image = new BufferedImage( ARGB_COLOR_MODEL, rgbRaster, false, null );

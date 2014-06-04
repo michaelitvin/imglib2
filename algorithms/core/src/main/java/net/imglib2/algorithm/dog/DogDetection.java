@@ -62,6 +62,12 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 		MINIMA, MAXIMA
 	}
 
+	/**
+	 * {@link ExecutorService} used for Multi-Threading. If null, a new one will
+	 * be created on demand
+	 **/
+	private ExecutorService executorService;
+
 	public < I extends RandomAccessibleInterval< T > & LinearSpace< ? > > DogDetection(
 			final I input,
 			final double sigma1,
@@ -192,36 +198,95 @@ public class DogDetection< T extends RealType< T > & NativeType< T > >
 	}
 
 	protected final RandomAccessible< T > input;
+
 	protected final Interval interval;
+
 	protected final double sigma1;
+
 	protected final double sigma2;
+
 	protected final double[] pixelSize;
+
 	protected RandomAccessibleInterval< T > dogImg;
 
 	protected double imageSigma;
+
 	protected double minf;
+
 	protected ExtremaType extremaType;
+
 	protected double minPeakValue;
+
 	protected boolean normalizeMinPeakValue;
+
 	protected boolean keepDoGImg;
+
 	protected int numThreads;
-	protected ExecutorService executorService;
 
-	public void setImageSigma( final double imageSigma ) { this.imageSigma = imageSigma; }
-	public void setMinf( final double minf ) { this.minf = minf; }
-	public void setMinPeakValue( final double minPeakValue ) { this.minPeakValue = minPeakValue; }
-	public void setNormalizeMinPeakValue( final boolean normalizeMinPeakValue ) { this.normalizeMinPeakValue = normalizeMinPeakValue; }
-	public void setKeepDoGImg( final boolean keepDoGImg ) { this.keepDoGImg = keepDoGImg; }
-	public void setNumThreads( final int numThreads ) { this.numThreads = numThreads; }
-	public void setExecutorService( final ExecutorService service ) { this.executorService = service; }
+	public void setImageSigma( final double imageSigma )
+	{
+		this.imageSigma = imageSigma;
+	}
 
-	public double getImageSigma() { return imageSigma; }
-	public double getMinf() { return minf; }
-	public double getMinPeakValue() { return minPeakValue; }
-	public boolean getNormalizeMinPeakValue() { return normalizeMinPeakValue; }
-	public boolean getKeepDoGImg() { return keepDoGImg; }
-	public int getNumThreads() { return numThreads; }
-	public ExecutorService getExecutorService() { return executorService; }
+	public void setMinf( final double minf )
+	{
+		this.minf = minf;
+	}
+
+	public void setMinPeakValue( final double minPeakValue )
+	{
+		this.minPeakValue = minPeakValue;
+	}
+
+	public void setNormalizeMinPeakValue( final boolean normalizeMinPeakValue )
+	{
+		this.normalizeMinPeakValue = normalizeMinPeakValue;
+	}
+
+	public void setKeepDoGImg( final boolean keepDoGImg )
+	{
+		this.keepDoGImg = keepDoGImg;
+	}
+
+	public void setNumThreads( final int numThreads )
+	{
+		this.numThreads = numThreads;
+	}
+
+	public double getImageSigma()
+	{
+		return imageSigma;
+	}
+
+	public double getMinf()
+	{
+		return minf;
+	}
+
+	public double getMinPeakValue()
+	{
+		return minPeakValue;
+	}
+
+	public boolean getNormalizeMinPeakValue()
+	{
+		return normalizeMinPeakValue;
+	}
+
+	public boolean getKeepDoGImg()
+	{
+		return keepDoGImg;
+	}
+
+	public int getNumThreads()
+	{
+		return numThreads;
+	}
+
+	public void setExecutorService( final ExecutorService service )
+	{
+		this.executorService = service;
+	}
 
 	private static double[] getcalib( final LinearSpace< ? > calib )
 	{

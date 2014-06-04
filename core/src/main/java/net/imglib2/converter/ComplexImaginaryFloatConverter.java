@@ -48,5 +48,5 @@ public class ComplexImaginaryFloatConverter< R extends ComplexType< R > > implem
 	public void convert( final R input, final FloatType output )
 	{
 		output.set( input.getImaginaryFloat() );
-	}	
+	}
 }

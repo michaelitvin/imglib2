@@ -48,5 +48,5 @@ public class ComplexRealFloatConverter< R extends ComplexType< R > > implements 
 	public void convert( final R input, final FloatType output )
 	{
 		output.set( input.getRealFloat() );
-	}	
+	}
 }

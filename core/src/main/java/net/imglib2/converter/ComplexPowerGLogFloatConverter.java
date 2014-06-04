@@ -49,5 +49,5 @@ public class ComplexPowerGLogFloatConverter< R extends ComplexType< R > > implem
 	public void convert( final R input, final FloatType output )
 	{
 		output.set( Util.gLog( input.getPowerFloat(), 2 ) );
-	}	
+	}
 }
