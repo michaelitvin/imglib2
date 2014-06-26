@@ -96,7 +96,7 @@ public class FFT
 	final public static < R extends RealType< R >, C extends ComplexType< C > > Img< C > realToComplex( final RandomAccessible< R > input, final Interval inputInterval, final ImgFactory< C > factory, final C type, final int numThreads )
 	{
 		final ExecutorService service = Executors.newFixedThreadPool( numThreads );
-		final Img< C >  ret = realToComplex( input, inputInterval, factory, type, numThreads );
+		final Img< C >  ret = realToComplex( input, inputInterval, factory, type, service );
 		service.shutdown();
 		
 		return ret;
