@@ -495,6 +495,16 @@ public class FFTConvolution< R extends RealType< R > >
 		// compute the new interval for the input image
 		final Interval imgConvolutionInterval = FFTMethods.paddingIntervalCentered( imgInterval, FinalDimensions.wrap( paddedDimensions ) );
 
+        // we need to recalculate for a new kernel
+        if (fftImg != null) {
+            for (int d = 0; d < imgConvolutionInterval.numDimensions(); d++) {
+                if (imgConvolutionInterval.dimension(d) != fftImg.dimension(d)) {
+                    fftImg = null;
+                    break;
+                }
+            }
+        }
+		
 		// compute the new interval for the kernel image
 		final Interval kernelConvolutionInterval = FFTMethods.paddingIntervalCentered( kernelInterval, FinalDimensions.wrap( paddedDimensions ) );
 
