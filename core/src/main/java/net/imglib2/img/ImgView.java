@@ -51,14 +51,15 @@ import net.imglib2.view.iteration.SubIntervalIterable;
  * @author Tobias Pietzsch
  * @author Christian Dietz (dietzc85@googlemail.com)
  */
-public class ImgView< T extends Type< T >> extends IterableRandomAccessibleInterval< T > implements Img< T >, SubIntervalIterable< T >
-{
+public class ImgView<T extends Type<T>> extends
+		IterableRandomAccessibleInterval<T> implements Img<T>,
+		SubIntervalIterable<T> {
 
 	// factory
-	private final ImgFactory< T > factory;
+	private final ImgFactory<T> factory;
 
 	// ImgView ii
-	private final IterableInterval< T > ii;
+	private final IterableInterval<T> ii;
 
 	/**
 	 * View on {@link Img} which is defined by a given Interval, but still is an
@@ -69,92 +70,99 @@ public class ImgView< T extends Type< T >> extends IterableRandomAccessibleInter
 	 * @param fac
 	 *            <T> Factory to create img
 	 */
-	public ImgView( final RandomAccessibleInterval< T > in, final ImgFactory< T > fac )
-	{
-		super( in );
+	public ImgView(final RandomAccessibleInterval<T> in, final ImgFactory<T> fac) {
+		super(unpack(in));
 		factory = fac;
-		ii = Views.flatIterable( in );
+		ii = Views.flatIterable(in);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> RandomAccessibleInterval<T> unpack(
+			final RandomAccessibleInterval<T> in) {
+		RandomAccessibleInterval<T> unpacked = in;
+
+		while (unpacked instanceof WrappedImg) {
+			unpacked = ((WrappedImg<T>) unpacked).getImg();
+		}
+
+		return unpacked;
 	}
 
 	@Override
-	public ImgFactory< T > factory()
-	{
+	public ImgFactory<T> factory() {
 		return factory;
 	}
 
 	@Override
-	public Img< T > copy()
-	{
-		final Img< T > copy = factory.create( this, randomAccess().get().createVariable() );
+	public Img<T> copy() {
+		final Img<T> copy = factory.create(this, randomAccess().get()
+				.createVariable());
 
-		final Cursor< T > srcCursor = localizingCursor();
-		final RandomAccess< T > resAccess = copy.randomAccess();
+		final Cursor<T> srcCursor = localizingCursor();
+		final RandomAccess<T> resAccess = copy.randomAccess();
 
-		while ( srcCursor.hasNext() )
-		{
+		while (srcCursor.hasNext()) {
 			srcCursor.fwd();
-			resAccess.setPosition( srcCursor );
-			resAccess.get().set( srcCursor.get() );
+			resAccess.setPosition(srcCursor);
+			resAccess.get().set(srcCursor.get());
 		}
 
 		return copy;
 	}
 
 	@Override
-	public Cursor< T > cursor()
-	{
+	public Cursor<T> cursor() {
 		return ii.cursor();
 	}
 
 	@Override
-	public Cursor< T > localizingCursor()
-	{
+	public Cursor<T> localizingCursor() {
 		return ii.localizingCursor();
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean supportsOptimizedCursor( final Interval interval )
-	{
-		if ( this.sourceInterval instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).supportsOptimizedCursor( interval );
+	public boolean supportsOptimizedCursor(final Interval interval) {
+		if (this.sourceInterval instanceof SubIntervalIterable)
+			return ((SubIntervalIterable<T>) this.sourceInterval)
+					.supportsOptimizedCursor(interval);
 		else
 			return false;
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object subIntervalIterationOrder( final Interval interval )
-	{
-		if ( this.sourceInterval instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).subIntervalIterationOrder( interval );
+	public Object subIntervalIterationOrder(final Interval interval) {
+		if (this.sourceInterval instanceof SubIntervalIterable)
+			return ((SubIntervalIterable<T>) this.sourceInterval)
+					.subIntervalIterationOrder(interval);
 		else
-			return new FlatIterationOrder( interval );
+			return new FlatIterationOrder(interval);
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings("unchecked")
 	@Override
-	public Cursor< T > cursor( final Interval interval )
-	{
-		if ( this.sourceInterval instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).cursor( interval );
+	public Cursor<T> cursor(final Interval interval) {
+		if (this.sourceInterval instanceof SubIntervalIterable)
+			return ((SubIntervalIterable<T>) this.sourceInterval)
+					.cursor(interval);
 		else
-			return Views.interval( this.sourceInterval, interval ).cursor();
+			return Views.interval(this.sourceInterval, interval).cursor();
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings("unchecked")
 	@Override
-	public Cursor< T > localizingCursor( final Interval interval )
-	{
-		if ( this.sourceInterval instanceof SubIntervalIterable )
-			return ( ( SubIntervalIterable< T > ) this.sourceInterval ).localizingCursor( interval );
+	public Cursor<T> localizingCursor(final Interval interval) {
+		if (this.sourceInterval instanceof SubIntervalIterable)
+			return ((SubIntervalIterable<T>) this.sourceInterval)
+					.localizingCursor(interval);
 		else
-			return Views.interval( this.sourceInterval, interval ).localizingCursor();
+			return Views.interval(this.sourceInterval, interval)
+					.localizingCursor();
 	}
 
 	@Override
-	public boolean equalIterationOrder( final IterableRealInterval< ? > f )
-	{
-		return iterationOrder().equals( f.iterationOrder() );
+	public boolean equalIterationOrder(final IterableRealInterval<?> f) {
+		return iterationOrder().equals(f.iterationOrder());
 	}
 }
