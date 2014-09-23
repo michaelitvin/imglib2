@@ -1,5 +1,10 @@
 package net.imglib2.img;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+import neon.annotation.ByTypeOf;
+import neon.annotation.Instantiate;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -8,6 +13,7 @@ import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.img.planar.PlanarImgs;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.BenchmarkHelper;
 import net.imglib2.view.Views;
 
 /*
@@ -27,55 +33,16 @@ public class IterableSubIntervalBenchmark2
 	 * @param img
 	 * @param interval
 	 */
-	protected static void localizingWalkThrough1( final Img< IntType > img, final Interval interval )
+	protected static void localizingWalkThrough( final Img< IntType > img, final Interval interval )
 	{
 		final Cursor< IntType > c = Views.interval( img, interval ).localizingCursor();
 		final long[] pos = new long[ interval.numDimensions() ];
-		int i = 0;
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			i += c.get().get();
-			c.localize( pos );
-		}
-		j = ( int ) pos[ 0 ] + i;
+		localizingWalkThroughLoop( c, pos );
 	}
 
-	// exact copy of localizingWalkThrough1
-	protected static void localizingWalkThrough2( final Img< IntType > img, final Interval interval )
+	@Instantiate
+	protected static void localizingWalkThroughLoop( @ByTypeOf final Cursor< IntType > c, final long[] pos )
 	{
-		final Cursor< IntType > c = Views.interval( img, interval ).localizingCursor();
-		final long[] pos = new long[ interval.numDimensions() ];
-		int i = 0;
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			i += c.get().get();
-			c.localize( pos );
-		}
-		j = ( int ) pos[ 0 ] + i;
-	}
-
-	// exact copy of localizingWalkThrough1
-	protected static void localizingWalkThrough3( final Img< IntType > img, final Interval interval )
-	{
-		final Cursor< IntType > c = Views.interval( img, interval ).localizingCursor();
-		final long[] pos = new long[ interval.numDimensions() ];
-		int i = 0;
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			i += c.get().get();
-			c.localize( pos );
-		}
-		j = ( int ) pos[ 0 ] + i;
-	}
-
-	// exact copy of localizingWalkThrough1
-	protected static void localizingWalkThrough4( final Img< IntType > img, final Interval interval )
-	{
-		final Cursor< IntType > c = Views.interval( img, interval ).localizingCursor();
-		final long[] pos = new long[ interval.numDimensions() ];
 		int i = 0;
 		while ( c.hasNext() )
 		{
@@ -92,48 +59,15 @@ public class IterableSubIntervalBenchmark2
 	 * @param img
 	 * @param interval
 	 */
-	protected static void walkThrough1( final Img< IntType > img, final Interval interval )
+	protected static void walkThrough( final Img< IntType > img, final Interval interval )
 	{
 		final Cursor< IntType > c = Views.interval( img, interval ).cursor();
-		int i = 0;
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			i += c.get().get();
-		}
-		j = i;
+		walkThroughLoop( c );
 	}
 
-	// exact copy of walkThrough1
-	protected static void walkThrough2( final Img< IntType > img, final Interval interval )
+	@Instantiate
+	protected static void walkThroughLoop( @ByTypeOf final Cursor< IntType > c )
 	{
-		final Cursor< IntType > c = Views.interval( img, interval ).cursor();
-		int i = 0;
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			i += c.get().get();
-		}
-		j = i;
-	}
-
-	// exact copy of walkThrough1
-	protected static void walkThrough3( final Img< IntType > img, final Interval interval )
-	{
-		final Cursor< IntType > c = Views.interval( img, interval ).cursor();
-		int i = 0;
-		while ( c.hasNext() )
-		{
-			c.fwd();
-			i += c.get().get();
-		}
-		j = i;
-	}
-
-	// exact copy of walkThrough1
-	protected static void walkThrough4( final Img< IntType > img, final Interval interval )
-	{
-		final Cursor< IntType > c = Views.interval( img, interval ).cursor();
 		int i = 0;
 		while ( c.hasNext() )
 		{
@@ -191,19 +125,19 @@ public class IterableSubIntervalBenchmark2
 
 		System.out.println( "normal cursor | array img" );
 		System.out.println( "walk through a subinterval" );
-		IterableSubIntervalBenchmark.benchmarkAndCompare( numRuns, printIndividualTimes, new Runnable()
+		benchmarkAndCompare( numRuns, printIndividualTimes, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				walkThrough1( arrayImgUnOp, interval );
+				walkThrough( arrayImgUnOp, interval );
 			}
 		}, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				walkThrough2( arrayImg, interval );
+				walkThrough( arrayImg, interval );
 			}
 		} );
 
@@ -211,19 +145,19 @@ public class IterableSubIntervalBenchmark2
 
 		System.out.println( "localizing cursor | array img" );
 		System.out.println( "walk through a subinterval" );
-		IterableSubIntervalBenchmark.benchmarkAndCompare( numRuns, printIndividualTimes, new Runnable()
+		benchmarkAndCompare( numRuns, printIndividualTimes, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				localizingWalkThrough1( arrayImgUnOp, interval );
+				localizingWalkThrough( arrayImgUnOp, interval );
 			}
 		}, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				localizingWalkThrough2( arrayImg, interval );
+				localizingWalkThrough( arrayImg, interval );
 			}
 		} );
 	}
@@ -240,19 +174,19 @@ public class IterableSubIntervalBenchmark2
 
 		System.out.println( "normal cursor | planar img" );
 		System.out.println( "walk through a subinterval" );
-		IterableSubIntervalBenchmark.benchmarkAndCompare( numRuns, printIndividualTimes, new Runnable()
+		benchmarkAndCompare( numRuns, printIndividualTimes, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				walkThrough3( planarImgUnOp, interval );
+				walkThrough( planarImgUnOp, interval );
 			}
 		}, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				walkThrough4( planarImg, interval );
+				walkThrough( planarImg, interval );
 			}
 		} );
 
@@ -260,21 +194,60 @@ public class IterableSubIntervalBenchmark2
 
 		System.out.println( "localizing cursor | planar img" );
 		System.out.println( "walk through a subinterval" );
-		IterableSubIntervalBenchmark.benchmarkAndCompare( numRuns, printIndividualTimes, new Runnable()
+		benchmarkAndCompare( numRuns, printIndividualTimes, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				localizingWalkThrough3( planarImgUnOp, interval );
+				localizingWalkThrough( planarImgUnOp, interval );
 			}
 		}, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				localizingWalkThrough4( planarImg, interval );
+				localizingWalkThrough( planarImg, interval );
 			}
 		} );
+	}
+
+	// HELPER
+
+	public static void benchmarkAndCompare( final int numRuns, final boolean individualRuns, final Runnable norm, final Runnable opt )
+	{
+		final ArrayList< Long > valuesNorm = BenchmarkHelper.benchmark( numRuns, norm );
+		final ArrayList< Long > valuesOpt = BenchmarkHelper.benchmark( numRuns, opt );
+
+		final long[] statsNorm = computeStats( valuesNorm );
+		final long[] statsOpt = computeStats( valuesOpt );
+		final long[] statsDiff = new long[] { ( statsNorm[ 0 ] - statsOpt[ 0 ] ), ( statsNorm[ 1 ] - statsOpt[ 1 ] ), ( statsNorm[ 2 ] - statsOpt[ 2 ] ) };
+		// print
+		System.out.println( "\t| Unoptimized \t| Optimized \t| Speedup Time \t| Speedup % \t|" );
+		System.out.println( "Median\t|\t" + statsNorm[ 0 ] + "\t|\t" + statsOpt[ 0 ] + "\t| " + statsDiff[ 0 ] + "ms   \t| " + ( ( int ) ( 1000.0 / statsNorm[ 0 ] * statsDiff[ 0 ] ) / 10.0 ) + "%   \t|" );
+		System.out.println( "Best\t|\t" + statsNorm[ 1 ] + "\t|\t" + statsOpt[ 1 ] + "\t| " + statsDiff[ 1 ] + "ms   \t| " + ( ( int ) ( 1000.0 / statsNorm[ 1 ] * statsDiff[ 1 ] ) / 10.0 ) + "%   \t|" );
+		System.out.println( "Worst\t|\t" + statsNorm[ 2 ] + "\t|\t" + statsOpt[ 2 ] + "\t| " + statsDiff[ 2 ] + "ms   \t| " + ( ( int ) ( 1000.0 / statsNorm[ 2 ] * statsDiff[ 2 ] ) / 10.0 ) + "%   \t|" );
+		System.out.println();
+	}
+
+	public static long[] computeStats( final ArrayList< Long > values )
+	{
+		Collections.sort( values );
+
+		long median = 0;
+
+		if ( values.size() % 2 == 1 )
+		{
+			median = values.get( ( values.size() + 1 ) / 2 - 1 );
+		}
+		else
+		{
+			final long lower = values.get( values.size() / 2 - 1 );
+			final long upper = values.get( values.size() / 2 );
+
+			median = ( lower + upper ) / 2;
+		}
+
+		return new long[] { median, values.get( 0 ), values.get( values.size() - 1 ) };
 	}
 
 }
